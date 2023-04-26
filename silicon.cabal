@@ -1,0 +1,31 @@
+cabal-version:      3.4
+name:               silicon
+version:            0.0.0
+synopsis:           Software Simulation of Synchronous Digital Circuits
+-- description:
+license:            BSD-3-Clause
+license-file:       LICENSE
+-- author:
+maintainer:         exclusiveandgate@gmail.com
+-- copyright:
+build-type:         Simple
+extra-doc-files:    CHANGELOG.md
+-- extra-source-files:
+
+common common-options
+    default-language: Haskell2010
+    ghc-options: -Wall
+    default-extensions:
+        LambdaCase
+        NoStarIsType
+
+library
+    import:           common-options
+    hs-source-dirs:   src
+
+    exposed-modules:
+        Silicon
+        Silicon.Signal
+
+    build-depends:
+        base ^>=4.17.0.0
