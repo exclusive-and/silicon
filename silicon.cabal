@@ -16,6 +16,8 @@ common common-options
     default-language: Haskell2010
     ghc-options: -Wall
     default-extensions:
+        ConstraintKinds
+        DataKinds
         LambdaCase
         NoStarIsType
 
@@ -28,4 +30,6 @@ library
         Silicon.Signal
 
     build-depends:
-        base ^>=4.17.0.0
+        base        ^>= 4.17.0.0,
+        ghc-prim     >= 0.9.0,
+        lattices     >= 2

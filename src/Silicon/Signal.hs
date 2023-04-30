@@ -5,7 +5,7 @@
 -- Description  : Infinite Synchronous Signals
 -- 
 module Silicon.Signal
-    ( -- * Signal Data Types
+    ( -- * Signal Data Type
       Signal (..)
     , mapSignal
     , appSignal
@@ -15,10 +15,19 @@ module Silicon.Signal
     , sample
     , sampleN
     
+      -- * Algebra on Signals
+      --
+      -- $veryNearlyOrd
+    , (.==.), (./=.)
+    , (.<=.), (.<.)
+    , (.>=.), (.>.)
+
       -- * Signal Combinators
     , register
     ) where
 
+import Algebra.Lattice
+import Control.Applicative (liftA2)
 import Data.Function (fix)
 
 
@@ -74,7 +83,7 @@ instance Foldable Signal where
 
 ---------------------------------------------------------------------
 -- Signal Sampling
-    
+
 -- |
 -- Convert a signal to an infinite list using a fold.
 -- 
@@ -89,6 +98,52 @@ sample = foldr (:) []
 -- 
 sampleN :: Int -> Signal a -> [a]
 sampleN n = take n . sample
+
+
+---------------------------------------------------------------------
+-- Algebra on Signals
+
+instance Lattice a => Lattice (Signal a) where
+    (\/) = liftA2 (\/)
+    (/\) = liftA2 (/\)
+
+instance Num a => Num (Signal a) where
+    (+)         = liftA2 (+)
+    (-)         = liftA2 (-)
+    (*)         = liftA2 (*)
+    negate      = fmap negate
+    abs         = fmap abs
+    signum      = fmap signum
+
+    -- N.B. that this is sort of a hack, since @'Signal' 'Int'@ is
+    -- in theory of uncountable size.
+    --
+    -- To satisfy 'Num', we just need this injection, and not full
+    -- bijection with 'Integer'.
+    fromInteger = pure . fromInteger
+
+-- NOTE: We don't quite have enough structure to write an instance
+--       of 'Bits' for 'Signal'. In particular, we can't write the
+--       methods 'testBit' and 'popCount'.
+
+-- $veryNearlyOrd
+--
+-- We can very nearly, but not quite, implement 'Eq' and 'Ord'. The
+-- closest we can get is with the operators below.
+
+(.==.), (./=.)
+    :: (Eq a, Applicative f) => f a -> f a -> f Bool
+
+(.==.) = liftA2 (==)
+(./=.) = liftA2 (/=)
+
+(.<=.), (.<.), (.>=.), (.>.)
+    :: (Ord a, Applicative f) => f a -> f a -> f Bool
+
+(.<=.) = liftA2 (<=)
+(.<.)  = liftA2 (<)
+(.>=.) = liftA2 (>=)
+(.>.)  = liftA2 (>)
 
 
 ---------------------------------------------------------------------
