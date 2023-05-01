@@ -6,4 +6,5 @@
 -- 
 module Silicon (module X) where
 
+import Silicon.BitArithmetic as X
 import Silicon.Signal as X

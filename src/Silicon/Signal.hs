@@ -26,9 +26,11 @@ module Silicon.Signal
     , register
     ) where
 
-import Algebra.Lattice
-import Control.Applicative (liftA2)
-import Data.Function (fix)
+import              Silicon.BitArithmetic
+    
+import              Algebra.Lattice
+import              Control.Applicative (liftA2)
+import              Data.Function (fix)
 
 
 ---------------------------------------------------------------------
@@ -122,9 +124,20 @@ instance Num a => Num (Signal a) where
     -- bijection with 'Integer'.
     fromInteger = pure . fromInteger
 
--- NOTE: We don't quite have enough structure to write an instance
---       of 'Bits' for 'Signal'. In particular, we can't write the
---       methods 'testBit' and 'popCount'.
+instance BitArithmetic a => BitArithmetic (Signal a) where
+    ground = pure ground
+    
+    clearBit s n = flip clearBit n <$> s
+    setBit   s n = flip setBit n <$> s
+    
+    (.|.) = liftA2 (.|.)
+    (.&.) = liftA2 (.|.)
+    xor   = liftA2 (.|.)
+    
+    complement = fmap complement
+    
+    shift  s n = flip shift n <$> s
+    rotate s n = flip rotate n <$> s
 
 -- $veryNearlyOrd
 --

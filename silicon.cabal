@@ -18,6 +18,7 @@ common common-options
     default-extensions:
         ConstraintKinds
         DataKinds
+        DefaultSignatures
         LambdaCase
         NoStarIsType
 
@@ -27,6 +28,7 @@ library
 
     exposed-modules:
         Silicon
+        Silicon.BitArithmetic
         Silicon.Signal
 
     build-depends:
