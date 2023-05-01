@@ -16,7 +16,7 @@ module Silicon.BitArithmetic
     ) where
 
 import qualified    Data.Bits as Bits
-    
+
 
 ---------------------------------------------------------------------
 -- Arithmetic Laws
