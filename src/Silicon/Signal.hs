@@ -127,8 +127,8 @@ instance Num a => Num (Signal a) where
 instance BitArithmetic a => BitArithmetic (Signal a) where
     ground = pure ground
     
-    clearBit s n = flip clearBit n <$> s
-    setBit   s n = flip setBit n <$> s
+    clearBit n = fmap (clearBit n)
+    setBit   n = fmap (setBit n)
     
     (.|.) = liftA2 (.|.)
     (.&.) = liftA2 (.|.)
@@ -136,8 +136,8 @@ instance BitArithmetic a => BitArithmetic (Signal a) where
     
     complement = fmap complement
     
-    shift  s n = flip shift n <$> s
-    rotate s n = flip rotate n <$> s
+    shift  n = fmap (shift n)
+    rotate n = fmap (rotate n)
 
 -- $veryNearlyOrd
 --
@@ -166,4 +166,6 @@ instance BitArithmetic a => BitArithmetic (Signal a) where
 -- Registers delay signals by one timestep.
 -- 
 register :: a -> Signal a -> Signal a
-register resetVal (x :- xs) = resetVal :- x :- xs
+register resetVal xs = resetVal :- xs
+
+{-# NOINLINE register #-}

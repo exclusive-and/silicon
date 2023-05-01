@@ -48,18 +48,18 @@ class BitArithmetic a where
     -- |
     -- @'clearBit' x i@ forces the @i@-th bit of @x@ to be low.
     -- 
-    clearBit :: a -> Int -> a
+    clearBit :: Int -> a -> a
     
-    default clearBit :: Bits.Bits a => a -> Int -> a
-    clearBit = Bits.clearBit
+    default clearBit :: Bits.Bits a => Int -> a -> a
+    clearBit = flip Bits.clearBit
     
     -- |
     -- @'setBit' x i@ forces the @i@-th bit of @x@ to be high.
     -- 
-    setBit :: a -> Int -> a
+    setBit :: Int -> a -> a
     
-    default setBit :: Bits.Bits a => a -> Int -> a
-    setBit = Bits.setBit
+    default setBit :: Bits.Bits a => Int -> a -> a
+    setBit = flip Bits.setBit
     
     
     -----------------------------------------------------------------
@@ -97,19 +97,19 @@ class BitArithmetic a where
     -- @'shift' x i@ shifts @x@ left by @i@ bits if @i@ is positive.
     -- Otherwise, it shifts right by @-i@.
     -- 
-    shift :: a -> Int -> a
+    shift :: Int -> a -> a
     
-    default shift :: Bits.Bits a => a -> Int -> a
-    shift = Bits.shift
+    default shift :: Bits.Bits a => Int -> a -> a
+    shift = flip Bits.shift
     
     -- |
     -- @'rotate' x i@ rotates @x@ left by @i@ bits if @i@ is
     -- positive. Otherwise, it rotates right by @-i@.
     -- 
-    rotate :: a -> Int -> a
+    rotate :: Int -> a -> a
     
-    default rotate :: Bits.Bits a => a -> Int -> a
-    rotate = Bits.rotate
+    default rotate :: Bits.Bits a => Int -> a -> a
+    rotate = flip Bits.rotate
 
 
 instance BitArithmetic Bool
@@ -129,23 +129,23 @@ instance BitArithmetic Word64
 -- |
 -- Shift the argument left by @i@ bits.
 -- 
-shiftLeft :: BitArithmetic a => a -> Int -> a
-shiftLeft a i = shift a i
+shiftLeft :: BitArithmetic a => Int -> a -> a
+shiftLeft = shift
 
 -- |
 -- Shift the argument right by @i@ bits.
 --
-shiftRight :: BitArithmetic a => a -> Int -> a
-shiftRight a i = shift a $ -i
+shiftRight :: BitArithmetic a => Int -> a -> a
+shiftRight = shift . negate
 
 -- |
 -- Rotate the argument left by @i@ bits.
 --
-rotateLeft :: BitArithmetic a => a -> Int -> a
-rotateLeft a i = rotate a i
+rotateLeft :: BitArithmetic a => Int -> a -> a
+rotateLeft = rotate
 
 -- |
 -- Rotate the argument right by @i@ bits.
 --
-rotateRight :: BitArithmetic a => a -> Int -> a
-rotateRight a i = rotate a $ -i
+rotateRight :: BitArithmetic a => Int -> a -> a
+rotateRight = rotate . negate
