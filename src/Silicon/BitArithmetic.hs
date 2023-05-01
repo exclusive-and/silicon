@@ -28,6 +28,9 @@ import qualified    Data.Bits as Bits
 -- we can write an instance for 'Silicon.Signal'.
 --
 class BitArithmetic a where
+    -----------------------------------------------------------------
+    -- Ground State Law
+    
     -- |
     -- The value corresponding to having all bits pulled low.
     -- 
@@ -36,8 +39,12 @@ class BitArithmetic a where
     default ground :: Bits.Bits a => a
     ground = Bits.zeroBits
     
+    
+    -----------------------------------------------------------------
+    -- Single Bit Set and Reset Laws
+    
     -- |
-    -- Set the @i@-th bit in the argument low.
+    -- @'clearBit' x i@ forces the @i@-th bit of @x@ to be low.
     -- 
     clearBit :: a -> Int -> a
     
@@ -45,12 +52,16 @@ class BitArithmetic a where
     clearBit = Bits.clearBit
     
     -- |
-    -- Set the @i@-th bit in the argument high.
+    -- @'setBit' x i@ forces the @i@-th bit of @x@ to be high.
     -- 
     setBit :: a -> Int -> a
     
     default setBit :: Bits.Bits a => a -> Int -> a
     setBit = Bits.setBit
+    
+    
+    -----------------------------------------------------------------
+    -- Bitwise Logic Operations
     
     -- | Bitwise OR. 
     (.|.) :: a -> a -> a
@@ -76,9 +87,13 @@ class BitArithmetic a where
     default complement :: Bits.Bits a => a -> a
     complement = Bits.complement
     
+    
+    -----------------------------------------------------------------
+    -- Shifting and Rotation
+    
     -- |
-    -- Shift the first argument left by @i@ bits if @i@ is positive.
-    -- Otherwise, shift it right by @-i@ bits.
+    -- @'shift' x i@ shifts @x@ left by @i@ bits if @i@ is positive.
+    -- Otherwise, it shifts right by @-i@.
     -- 
     shift :: a -> Int -> a
     
@@ -86,8 +101,8 @@ class BitArithmetic a where
     shift = Bits.shift
     
     -- |
-    -- Rotate the first argument left by @i@ bits if @i@ is
-    -- positive. Otherwise, rotate right by @-i@ bits.
+    -- @'rotate' x i@ rotates @x@ left by @i@ bits if @i@ is
+    -- positive. Otherwise, it rotates right by @-i@.
     -- 
     rotate :: a -> Int -> a
     
