@@ -30,8 +30,7 @@ import              Numeric.Natural
 -- we can write an instance for 'Silicon.Signal'.
 --
 class BitArithmetic a where
-    -----------------------------------------------------------------
-    -- Ground State Law
+    -- Ground State Law ---------------------------------------------
     
     -- |
     -- The value corresponding to having all bits pulled low.
@@ -42,8 +41,7 @@ class BitArithmetic a where
     ground = Bits.zeroBits
     
     
-    -----------------------------------------------------------------
-    -- Single Bit Set and Reset Laws
+    -- Single Bit Set and Reset Laws --------------------------------
     
     -- |
     -- @'clearBit' x i@ forces the @i@-th bit of @x@ to be low.
@@ -62,8 +60,7 @@ class BitArithmetic a where
     setBit = flip Bits.setBit
     
     
-    -----------------------------------------------------------------
-    -- Bitwise Logic Operations
+    -- Bitwise Logic Operations -------------------------------------
     
     -- | Bitwise OR. 
     (.|.) :: a -> a -> a
@@ -90,8 +87,7 @@ class BitArithmetic a where
     complement = Bits.complement
     
     
-    -----------------------------------------------------------------
-    -- Shifting and Rotation
+    -- Shifting and Rotation ----------------------------------------
     
     -- |
     -- @'shift' x i@ shifts @x@ left by @i@ bits if @i@ is positive.
