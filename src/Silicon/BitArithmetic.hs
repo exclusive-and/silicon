@@ -16,6 +16,8 @@ module Silicon.BitArithmetic
     ) where
 
 import qualified    Data.Bits as Bits
+import              Data.Word
+import              Numeric.Natural
 
 
 ---------------------------------------------------------------------
@@ -108,6 +110,17 @@ class BitArithmetic a where
     
     default rotate :: Bits.Bits a => a -> Int -> a
     rotate = Bits.rotate
+
+
+instance BitArithmetic Bool
+instance BitArithmetic Int
+instance BitArithmetic Integer
+instance BitArithmetic Natural
+instance BitArithmetic Word
+instance BitArithmetic Word8
+instance BitArithmetic Word16
+instance BitArithmetic Word32
+instance BitArithmetic Word64
 
 
 ---------------------------------------------------------------------
