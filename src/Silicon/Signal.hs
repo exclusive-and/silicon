@@ -24,6 +24,7 @@ module Silicon.Signal
 
       -- * Signal Combinators
     , register
+    , regEn
     ) where
 
 import              Silicon.BitArithmetic
@@ -169,3 +170,10 @@ register :: a -> Signal a -> Signal a
 register resetVal xs = resetVal :- xs
 
 {-# NOINLINE register #-}
+
+-- |
+-- Register with a conditional enable.
+-- 
+regEn :: a -> Signal Bool -> Signal a -> Signal a
+regEn resetVal = go resetVal where
+    go o ~(e :- es) ~(x :- xs) = o :- go (if e then x else o) es xs
