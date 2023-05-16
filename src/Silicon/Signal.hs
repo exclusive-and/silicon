@@ -23,6 +23,7 @@ module Silicon.Signal
     , (.>=.), (.>.)
 
       -- * Signal Combinators
+    , mux
     , register
     , regEn
     ) where
@@ -30,7 +31,7 @@ module Silicon.Signal
 import              Silicon.BitArithmetic
     
 import              Algebra.Lattice
-import              Control.Applicative (liftA2)
+import              Control.Applicative (liftA2, liftA3)
 import              Data.Function (fix)
 
 
@@ -162,6 +163,12 @@ instance BitArithmetic a => BitArithmetic (Signal a) where
 
 ---------------------------------------------------------------------
 -- Signal Combinators
+
+-- |
+-- 
+-- 
+mux :: Applicative f => f Bool -> f a -> f a -> f a
+mux = liftA3 (\b t f -> if b then t else f)
 
 -- |
 -- Registers delay signals by one timestep.
