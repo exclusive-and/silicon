@@ -26,6 +26,7 @@ module Silicon.Signal
     , mux
     , register
     , regEn
+    , regMaybe
     ) where
 
 import              Silicon.BitArithmetic
@@ -33,6 +34,7 @@ import              Silicon.BitArithmetic
 import              Algebra.Lattice
 import              Control.Applicative (liftA2, liftA3)
 import              Data.Function (fix)
+import              Data.Maybe (fromMaybe)
 
 
 ---------------------------------------------------------------------
@@ -184,3 +186,8 @@ register resetVal xs = resetVal :- xs
 regEn :: a -> Signal Bool -> Signal a -> Signal a
 regEn resetVal = go resetVal where
     go o ~(e :- es) ~(x :- xs) = o :- go (if e then x else o) es xs
+
+regMaybe :: a -> Signal (Maybe a) -> Signal a
+regMaybe resetVal = go resetVal where
+    go o ~(x :- xs) = o :- go (fromMaybe o x) xs
+    
