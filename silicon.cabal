@@ -9,7 +9,7 @@ license-file:       LICENSE
 maintainer:         exclusiveandgate@gmail.com
 -- copyright:
 build-type:         Simple
-extra-doc-files:    CHANGELOG.md
+-- extra-doc-files:    CHANGELOG.md
 -- extra-source-files:
 
 common common-options
