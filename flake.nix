@@ -14,8 +14,8 @@
         (final: prev: {
           hask = final.haskell.packages.ghc96.override {
             overrides = haskfinal: haskprev: {
-              base-compat = self.callHackage "base-compat" "0.13.0" {};
-              lattices    = self.callHackage "lattices" "2.2" {};
+              base-compat = haskfinal.callHackage "base-compat" "0.13.0" {};
+              lattices    = haskfinal.callHackage "lattices" "2.2" {};
               silicon     = haskfinal.callCabal2nix "silicon" ./. {};
             };
           };
