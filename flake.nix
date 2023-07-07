@@ -30,6 +30,8 @@
         { inherit config system; overlays = [ haskOverlay ]; };
     in
     {
+      overlay = haskOverlay;
+
       packages.${system}.default = pkgs.silicon;
     };
 }
