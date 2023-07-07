@@ -8,20 +8,27 @@
 
   outputs = { self, nixpkgs }:
     let
+      config = {};
+
+      overlays = [
+        (final: prev: {
+          hask = final.haskell.packages.ghc96.override {
+            overrides = haskfinal: haskprev: {
+              silicon = haskfinal.callCabal2nix "silicon" ./. {};
+            };
+          };
+
+          silicon = final.hask.silicon;
+        })
+      ];
+
       system = "x86_64-linux";
 
-      pkgs = import nixpkgs { inherit system; };
-
-      ghc = pkgs.haskell.packages.ghc96.override
-        {
-          overrides = self: _: with nixpkgs.haskell.packages.ghc96;
-            {
-              base-compat = self.callHackage "base-compat" "0.13.0" {};
-              lattices    = self.callHackage "lattices" "2.2" {};
-            };
-        };
+      pkgs = import nixpkgs { inherit config overlays system; };
     in
     {
-      packages.${system}.default = ghc.callCabal2nix "silicon" ./. {};
+      overlays = overlays;
+
+      packages.${system}.default = pkgs.silicon;
     };
 }
