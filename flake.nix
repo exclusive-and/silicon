@@ -27,6 +27,6 @@
         { inherit config system; overlays = [ haskOverlay ]; };
     in
     {
-      packages.${system}.default = pkgs.silicon;
+      packages.${system}.default = pkgs.hask.callCabal2nix "silicon" ./. {};
     };
 }
