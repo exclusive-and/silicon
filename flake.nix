@@ -27,7 +27,7 @@
 
       system = "x86_64-linux";
 
-      pkgs = import nixpkgs { inherit config overlays system; };
+      pkgs = import nixpkgs { inherit config system; overlays = overlays; };
     in
     {
       overlays.default = overlay;
