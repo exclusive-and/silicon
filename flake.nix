@@ -17,8 +17,11 @@
             overrides = haskfinal: haskprev: {
               base-compat = haskfinal.callHackage "base-compat" "0.13.0" {};
               lattices    = haskfinal.callHackage "lattices" "2.2" {};
+              silicon     = haskfinal.callCabal2nix "silicon" ./. {};
             };
           };
+
+          silicon = final.hask.silicon;
         };
 
       system = "x86_64-linux";
@@ -27,6 +30,6 @@
         { inherit config system; overlays = [ haskOverlay ]; };
     in
     {
-      packages.${system}.default = pkgs.hask.callCabal2nix "silicon" ./. {};
+      packages.${system}.default = pkgs.silicon;
     };
 }
