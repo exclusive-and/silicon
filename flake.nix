@@ -1,32 +1,39 @@
 
 {
-  description = "Software Simulation of Synchronous Digital Circuits";
+    description = "Software Simulation of Synchronous Digital Circuits";
 
-  inputs = {
-    nixpkgs.url = "nixpkgs/nixos-unstable";
-  };
+    inputs = {
+        nixpkgs.url = "nixpkgs/nixos-unstable";
+    };
 
-  outputs = { self, nixpkgs }:
+    outputs = { self, nixpkgs }:
     let
-      # Overlay to manage dependencies in the Nix Haskell package set.
-      haskOverlay = final: prev:
-        {
-          hask = final.haskell.packages.ghc96.override {
-            overrides = haskfinal: haskprev: {
-              base-compat = haskfinal.callHackage "base-compat" "0.13.0" {};
-              lattices    = haskfinal.callHackage "lattices" "2.2" {};
-            };
-          };
+        system = "x86_64-linux";
 
-          silicon = final.hask.callCabal2nix "silicon" ./. {};
+        overlay = final: prev:
+        {
+            haskell.packages.ghc96 = prev.haskell.packages.ghc96.override
+            {
+                overrides = self: super:
+                {
+                    base-compat = self.callHackage "base-compat" "0.13.0" {};
+                    lattices    = self.callHackage "lattices" "2.2" {};
+                };
+            };
         };
 
-      system = "x86_64-linux";
-      pkgs = import nixpkgs { inherit system; overlays = [ haskOverlay ]; };
+        pkgs = import nixpkgs
+        {
+            inherit system;
+            overlays = [ overlay ];
+        };
+
+        silicon = pkgs.haskell.package.ghc96.callCabal2nix "silicon" ./. {};
+
     in
     {
-      overlays.default = haskOverlay;
+        overlays.default = overlay;
 
-      packages.${system}.default = pkgs.silicon;
+        packages.${system}.default = pkgs.silicon;
     };
 }
