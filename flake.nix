@@ -35,6 +35,6 @@
     {
         overlays.default = overlay;
 
-        packages.${system}.default = pkgs.silicon;
+        packages.${system}.default = silicon;
     };
 }
