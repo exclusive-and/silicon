@@ -3,7 +3,7 @@
     description = "Software Simulation of Synchronous Digital Circuits";
 
     inputs = {
-        nixpkgs.url = "nixpkgs/nixos-unstable";
+        nixpkgs.url = "nixpkgs/nixos-23.05";
     };
 
     outputs = { self, nixpkgs }:
@@ -12,12 +12,12 @@
 
         overlay = final: prev:
         {
-            haskell.packages.ghc96 = prev.haskell.packages.ghc96.override
+            silicon-depends = final.haskell.packages.ghc96.override
             {
-                overrides = self: super:
+                overrides = hself: hsuper:
                 {
-                    base-compat = self.callHackage "base-compat" "0.13.0" {};
-                    lattices    = self.callHackage "lattices" "2.2" {};
+                    base-compat = hself.callHackage "base-compat" "0.13.0" {};
+                    lattices    = hself.callHackage "lattices" "2.2" {};
                 };
             };
         };
@@ -28,7 +28,8 @@
             overlays = [ overlay ];
         };
 
-        silicon = pkgs.haskell.package.ghc96.callCabal2nix "silicon" ./. {};
+        silicon = pkgs.silicon-depends.callCabal2nix "silicon" ./. {};
+
 
     in
     {
