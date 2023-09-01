@@ -20,6 +20,7 @@ common common-options
         ConstraintKinds
         DataKinds
         DefaultSignatures
+        ImportQualifiedPost
         LambdaCase
         NoStarIsType
         TypeFamilies

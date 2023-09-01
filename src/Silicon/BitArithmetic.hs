@@ -1,47 +1,32 @@
 
----------------------------------------------------------------------
 -- |
 -- Module       : Silicon.BitArithmetic
 -- Description  : Arithmetic Laws for Bit-Encoded Types
 -- 
-module Silicon.BitArithmetic
-    ( -- * Arithmetic Laws
-      BitArithmetic (..)
-      
-      -- * Shifts and Rotates
-    , shiftLeft
-    , shiftRight
-    , rotateLeft
-    , rotateRight
-    ) where
+module Silicon.BitArithmetic where
 
-import qualified    Data.Bits as Bits
-import              Data.Word
-import              Numeric.Natural
+import Data.Bits qualified as Bits
+import Data.Word
+import Numeric.Natural
 
 
+-- * Arithmetic Laws
 ---------------------------------------------------------------------
--- Arithmetic Laws
 
 -- |
 -- Arithmetic laws for bit-encoded types.
 -- 
--- These laws are slightly more permissive than 'Bits.Bits' so that
--- we can write an instance for 'Silicon.Signal'.
+-- These laws are slightly more permissive than 'Bits.Bits' so that we can
+-- write an instance for 'Silicon.Signal'.
 --
 class BitArithmetic a where
-    -- Ground State Law ---------------------------------------------
-    
     -- |
-    -- The value corresponding to having all bits pulled low.
+    -- Ground state: the value corresponding to having all bits pulled low.
     -- 
     ground :: a
     
     default ground :: Bits.Bits a => a
     ground = Bits.zeroBits
-    
-    
-    -- Single Bit Set and Reset Laws --------------------------------
     
     -- |
     -- @'clearBit' x i@ forces the @i@-th bit of @x@ to be low.
@@ -58,9 +43,6 @@ class BitArithmetic a where
     
     default setBit :: Bits.Bits a => Int -> a -> a
     setBit = flip Bits.setBit
-    
-    
-    -- Bitwise Logic Operations -------------------------------------
     
     -- | Bitwise OR. 
     (.|.) :: a -> a -> a
@@ -86,9 +68,6 @@ class BitArithmetic a where
     default complement :: Bits.Bits a => a -> a
     complement = Bits.complement
     
-    
-    -- Shifting and Rotation ----------------------------------------
-    
     -- |
     -- @'shift' x i@ shifts @x@ left by @i@ bits if @i@ is positive.
     -- Otherwise, it shifts right by @-i@.
@@ -99,8 +78,8 @@ class BitArithmetic a where
     shift = flip Bits.shift
     
     -- |
-    -- @'rotate' x i@ rotates @x@ left by @i@ bits if @i@ is
-    -- positive. Otherwise, it rotates right by @-i@.
+    -- @'rotate' x i@ rotates @x@ left by @i@ bits if @i@ is positive.
+    -- Otherwise, it rotates right by @-i@.
     -- 
     rotate :: Int -> a -> a
     
@@ -119,29 +98,29 @@ instance BitArithmetic Word32
 instance BitArithmetic Word64
 
 
+-- * Shifts and Rotates
 ---------------------------------------------------------------------
--- Shifts and Rotates
 
 -- |
 -- Shift the argument left by @i@ bits.
 -- 
-shiftLeft :: BitArithmetic a => Int -> a -> a
-shiftLeft = shift
+shiftLeft :: BitArithmetic a => a -> Int -> a
+shiftLeft = flip shift
 
 -- |
 -- Shift the argument right by @i@ bits.
 --
-shiftRight :: BitArithmetic a => Int -> a -> a
-shiftRight = shift . negate
+shiftRight :: BitArithmetic a => a -> Int -> a
+shiftRight = flip $ shift . negate
 
 -- |
 -- Rotate the argument left by @i@ bits.
 --
-rotateLeft :: BitArithmetic a => Int -> a -> a
-rotateLeft = rotate
+rotateLeft :: BitArithmetic a => a -> Int -> a
+rotateLeft = flip rotate
 
 -- |
 -- Rotate the argument right by @i@ bits.
 --
-rotateRight :: BitArithmetic a => Int -> a -> a
-rotateRight = rotate . negate
+rotateRight :: BitArithmetic a => a -> Int -> a
+rotateRight = flip $ rotate . negate

@@ -1,50 +1,26 @@
 
----------------------------------------------------------------------
 -- |
 -- Module       : Silicon.Signal
--- Description  : Infinite Synchronous Signals
+-- Description  : Changing Values Over Time
 -- 
-module Silicon.Signal
-    ( -- * Signal Data Type
-      Signal (..)
-    , mapSignal
-    , appSignal
-    , foldSignal
+module Silicon.Signal where
+
+import Silicon.BitArithmetic
     
-      -- * Signal Sampling
-    , sample
-    , sampleN
-    
-      -- * Algebra on Signals
-      --
-      -- $veryNearlyOrd
-    , (.==.), (./=.)
-    , (.<=.), (.<.)
-    , (.>=.), (.>.)
-
-      -- * Signal Combinators
-    , mux
-    , register
-    , regEn
-    , regMaybe
-    ) where
-
-import              Silicon.BitArithmetic
-    
-import              Algebra.Lattice
-import              Control.Applicative (liftA2, liftA3)
-import              Data.Function (fix)
-import              Data.Maybe (fromMaybe)
+import Algebra.Lattice
+import Control.Applicative (liftA3)
+import Data.Function (fix)
+import  Data.Maybe (fromMaybe)
 
 
+-- * Signal Data Type
 ---------------------------------------------------------------------
--- Signal Data Type
 
 -- |
--- An infinite sequence of values.
+-- A lazy signal. Represents the changing value of a circuit component.
 -- 
--- Refer to 'foldSignal' and 'sampleN' for techniques for evaluating
--- these infinite signals.
+-- Refer to 'foldSignal' and 'sampleN' for techniques for evaluating these
+-- signals in simulations.
 -- 
 data Signal a = a :- Signal a
 
@@ -62,8 +38,8 @@ instance Functor Signal where
     fmap = mapSignal
 
 -- |
--- Given a signal of functions and a signal of arguments, apply each
--- function to its corresponding argument.
+-- Given a signal of functions and a signal of arguments, apply each function
+-- to its corresponding argument.
 -- 
 appSignal :: Signal (a -> b) -> Signal a -> Signal b
 appSignal (f :- fs) (a :- as) = f a :- appSignal fs as
@@ -75,9 +51,9 @@ instance Applicative Signal where
 -- |
 -- Fold right over a signal.
 -- 
--- Computers don't like folding infinite things! The binary operation
--- /must/ be lazy in its second argument for it to work. The
--- fold never terminates, so it will just ignore the initial value.
+-- Computers don't like folding infinite things! The binary operation /must/
+-- be lazy in its second argument for it to work. The fold never terminates,
+-- so it will just ignore the initial value.
 -- 
 foldSignal :: (a -> b -> b) -> b -> Signal a -> b
 foldSignal f _ = go where
@@ -87,8 +63,8 @@ instance Foldable Signal where
     foldr = foldSignal
 
 
+-- * Signal Sampling
 ---------------------------------------------------------------------
--- Signal Sampling
 
 -- |
 -- Convert a signal to an infinite list using a fold.
@@ -97,17 +73,15 @@ sample :: Signal a -> [a]
 sample = foldr (:) []
 
 -- |
--- Convert a signal to a finite list by taking an integer number of
--- samples.
--- 
+-- Convert a signal to a finite list by taking an integer number of samples.
 -- This is the /only/ way to evaluate a signal.
 -- 
 sampleN :: Int -> Signal a -> [a]
 sampleN n = take n . sample
 
 
+-- * Algebra for Signals
 ---------------------------------------------------------------------
--- Algebra on Signals
 
 instance Lattice a => Lattice (Signal a) where
     (\/) = liftA2 (\/)
@@ -120,12 +94,6 @@ instance Num a => Num (Signal a) where
     negate      = fmap negate
     abs         = fmap abs
     signum      = fmap signum
-
-    -- N.B. that this is sort of a hack, since @'Signal' 'Int'@ is
-    -- in theory of uncountable size.
-    --
-    -- To satisfy 'Num', we just need this injection, and not full
-    -- bijection with 'Integer'.
     fromInteger = pure . fromInteger
 
 instance BitArithmetic a => BitArithmetic (Signal a) where
@@ -143,10 +111,10 @@ instance BitArithmetic a => BitArithmetic (Signal a) where
     shift  n = fmap (shift n)
     rotate n = fmap (rotate n)
 
--- $veryNearlyOrd
+-- ** Very Nearly Ord Signals
 --
--- We can very nearly, but not quite, implement 'Eq' and 'Ord'. The
--- closest we can get is with the operators below.
+-- We can very nearly, but not quite, implement 'Eq' and 'Ord'. The closest we
+-- can get is with the operators below.
 
 (.==.), (./=.)
     :: (Eq a, Applicative f) => f a -> f a -> f Bool
@@ -163,8 +131,8 @@ instance BitArithmetic a => BitArithmetic (Signal a) where
 (.>.)  = liftA2 (>)
 
 
+-- * Signal Combinators
 ---------------------------------------------------------------------
--- Signal Combinators
 
 -- |
 -- 
