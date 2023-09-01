@@ -34,6 +34,7 @@ library
     exposed-modules:
         Silicon
         Silicon.BitArithmetic
+        Silicon.Bundle
         Silicon.Signal
 
     build-depends:

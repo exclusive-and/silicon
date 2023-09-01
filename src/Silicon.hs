@@ -1,5 +1,4 @@
 
----------------------------------------------------------------------
 -- |
 -- Module       : Silicon
 -- Description  : Top-level Silicon Re-exporter
@@ -9,9 +8,16 @@ module Silicon
     , (|>), (<|)
     ) where
 
+-- * Re-exported Modules
+---------------------------------------------------------------------
+    
 import Silicon.BitArithmetic as X
+import Silicon.Bundle as X
 import Silicon.Signal as X
 
+
+-- * Application Operators
+---------------------------------------------------------------------
 
 infixl 0 |>
 infixr 0 <|
