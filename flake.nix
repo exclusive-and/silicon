@@ -3,10 +3,14 @@
     description = "Software Simulation of Synchronous Digital Circuits";
 
     inputs = {
-        nixpkgs.url = "nixpkgs/nixos-unstable";
+        nixpkgs.url = "nixpkgs/nixos-23.05";
+        adm = {
+            url = "github:exclusive-and/ApplicativeDoMore";
+            inputs.nixpkgs.follows = "nixpkgs";
+        };
     };
 
-    outputs = { self, nixpkgs }:
+    outputs = { self, nixpkgs, adm, ... }:
     let
         system = "x86_64-linux";
 
@@ -16,6 +20,7 @@
             {
                 overrides = hself: hsuper:
                 {
+                    applicative-do-more = adm.packages.${system}.default;
                     base-compat = hself.callHackage "base-compat" "0.13.0" {};
                     lattices    = hself.callHackage "lattices" "2.2" {};
                 };
@@ -29,7 +34,6 @@
         };
 
         silicon = pkgs.silicon-depends.callCabal2nix "silicon" ./. {};
-
 
     in
     {

@@ -16,11 +16,15 @@ common common-options
     default-language: Haskell2010
     ghc-options: -Wall
     default-extensions:
+        ApplicativeDo
         ConstraintKinds
         DataKinds
         DefaultSignatures
         LambdaCase
         NoStarIsType
+        TypeFamilies
+        TypeFamilyDependencies
+        TypeOperators
 
 library
     import:           common-options
@@ -33,5 +37,6 @@ library
 
     build-depends:
         base         >= 4.17.0.0,
+        applicative-do-more,
         ghc-prim     >= 0.9.0,
         lattices     >= 2.2 && < 2.3

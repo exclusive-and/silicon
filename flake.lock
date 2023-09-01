@@ -1,22 +1,43 @@
 {
   "nodes": {
+    "adm": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1693452615,
+        "narHash": "sha256-ZHbSmq6sKo1oo2DjVdU6R1rU003zT89SoUg3u0c0Rpc=",
+        "owner": "exclusive-and",
+        "repo": "ApplicativeDoMore",
+        "rev": "39001a6ec26c8859ee0422ab476a03cda630953b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "exclusive-and",
+        "repo": "ApplicativeDoMore",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1691654369,
-        "narHash": "sha256-gSILTEx1jRaJjwZxRlnu3ZwMn1FVNk80qlwiCX8kmpo=",
+        "lastModified": 1693428224,
+        "narHash": "sha256-FWUUlhYqkGEySUD0blTADRiDQ7fw+H1ikivfu88uy+w=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "ce5e4a6ef2e59d89a971bc434ca8ca222b9c7f5e",
+        "rev": "841889913dfd06a70ffb39f603e29e46f45f0c1a",
         "type": "github"
       },
       "original": {
         "id": "nixpkgs",
-        "ref": "nixos-unstable",
+        "ref": "nixos-23.05",
         "type": "indirect"
       }
     },
     "root": {
       "inputs": {
+        "adm": "adm",
         "nixpkgs": "nixpkgs"
       }
     }
